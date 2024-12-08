@@ -27,13 +27,13 @@ resource "google_storage_bucket" "bucket_europe" {
 }
 
 resource "google_storage_bucket_object" "object_us" {
-    name = "image.png"
+    name = "image_bullet.jpg"
     bucket = google_storage_bucket.bucket_us.name
-    source = "image.png"
+    source = "images/image_bullet.jpg"
 }
 
 resource "google_storage_bucket_object" "object_europe" {
-    name = "image.png"
+    name = "image_dome.jpg"
     bucket = google_storage_bucket.bucket_europe.name
-    source = "image.png"
+    source = "images/image_dome.jpg"
 }
