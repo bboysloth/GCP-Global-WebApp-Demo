@@ -34,6 +34,7 @@ module "compute" {
   source = "./modules/compute"
   region = var.region
   project_id = var.project_id
+  subnet_id = module.network.subnet_us_id
 }
 
 # Call the storage module
@@ -47,10 +48,14 @@ module "loadbalancer" {
   source = "./modules/loadbalancer"
   region = var.region
   project_id = var.project_id
+  subnet_us_id = module.network.subnet_us_id
+  subnet_europe_id = module.network.subnet_europe_id
 }
 
 # Call the monitor module
 module "monitor" {
   source = "./modules/monitor"
   project_id = var.project_id
+  subnet_id = module.network.subnet_asia_id
 }
+
