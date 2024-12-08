@@ -10,7 +10,7 @@ resource "google_compute_instance_template" "default" {
     subnetwork = var.subnet_id
   }
 
-  # startup script can be moved to a seperate file later
+# startup script can be moved to a seperate file later
     metadata_startup_script = <<-EOF
         #!/bin/bash
         sudo apt-get update
@@ -32,7 +32,7 @@ resource "google_compute_instance_template" "default" {
         </VirtualHost>
         EOT
         sudo systemctl restart apache2
-        echo "<h1>Hello from $(hostname) in $(curl -s http://metadata.google.internal/computeMetadata/v1/instance/zone -H 'Metadata-Flavor: Google')</h1><img src='https://storage.googleapis.com/gcp-simple-global-web-app-demo-us/image.png'>" > /var/www/html/index.html
+        echo "<h1>Hello from $(hostname) in $(curl -s http://metadata.google.internal/computeMetadata/v1/instance/zone -H 'Metadata-Flavor: Google')</h1><img src='https://storage.googleapis.com/gcp-simple-global-web-app-demo-us-${var.project_id}/image_bullet.jpg'>" > /var/www/html/index.html
         EOF
 }
 
