@@ -8,3 +8,8 @@ variable "region" {
   type        = string
   default     = "us-central1"
 }
+
+variable "project_number" {
+  description = "The project number for the project"
+  type = number
+}
