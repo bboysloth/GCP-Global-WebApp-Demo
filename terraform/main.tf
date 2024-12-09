@@ -30,21 +30,19 @@ module "network" {
 }
 
 # Call the compute module for US
-module "compute_us" {  # Renamed to compute_us
+module "compute_us" {
   source     = "./modules/compute"
-  region     = var.region
+  region     = var.region          # us-central1
   project_id = var.project_id
-
-  subnet_id     = module.network.subnet_us_id # For us-central1
+  subnet_id  = module.network.subnet_us_id
 }
 
 # Call the compute module for Europe
-module "compute_europe" {  # Renamed to compute_europe
+module "compute_europe" {
   source     = "./modules/compute"
-  region     = "europe-west1" # Explicitly set the region for europe-west1
+  region     = "europe-west1"      # Explicitly set for Europe
   project_id = var.project_id
-
-  subnet_id = module.network.subnet_europe_id # For europe-west1
+  subnet_id  = module.network.subnet_europe_id
 }
 
 # Call the storage module
