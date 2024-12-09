@@ -13,3 +13,9 @@ variable "mig_us_instance_group" {
     type = string
     default = null # Make the variable optional and default it to a null value
 }
+
+variable "mig_europe_instance_group" { 
+  type = string
+  description = "Instance group for europe"
+  default     = null
+}
