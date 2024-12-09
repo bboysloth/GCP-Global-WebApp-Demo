@@ -1,7 +1,11 @@
-output "bucket_us_name" {
-  value = google_storage_bucket.bucket_us.name
+output "bucket_self_link_us" {
+    value = google_storage_bucket.bucket["us_central1"].self_link
 }
 
-output "bucket_europe_name" {
-  value = google_storage_bucket.bucket_europe.name
+output "bucket_self_link_europe" {
+    value = google_storage_bucket.bucket["europe_west1"].self_link
+
+}
+output "bucket_self_link_asia" {
+    value = google_storage_bucket.bucket["asia_southeast1"].self_link
 }
