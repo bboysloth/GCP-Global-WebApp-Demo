@@ -25,39 +25,39 @@ provider "google-beta" {
 
 # Call the network module
 module "network" {
-  source = "./modules/network"
+  source     = "./modules/network"
   project_id = var.project_id
 }
 
 # Call the compute module
 module "compute" {
-  source = "./modules/compute"
-  region = var.region
-  project_id = var.project_id
-  subnet_id = module.network.subnet_us_id
+  source           = "./modules/compute"
+  region           = var.region
+  project_id       = var.project_id
+  subnet_us_id     = module.network.subnet_us_id
+  subnet_europe_id = module.network.subnet_europe_id
 }
 
 # Call the storage module
 module "storage" {
-  source = "./modules/storage"
+  source     = "./modules/storage"
   project_id = var.project_id
 }
 
 # Call the loadbalancer module
 module "loadbalancer" {
-  source = "./modules/loadbalancer"
-  region = var.region
-  project_id = var.project_id
-  subnet_us_id = module.network.subnet_us_id
-  subnet_europe_id = module.network.subnet_europe_id
-  mig_us_self_link = module.compute.mig_us_self_link
+  source              = "./modules/loadbalancer"
+  region              = var.region
+  project_id          = var.project_id
+  subnet_us_id        = module.network.subnet_us_id
+  subnet_europe_id    = module.network.subnet_europe_id
+  mig_us_self_link    = module.compute.mig_us_self_link
   mig_europe_self_link = module.compute.mig_europe_self_link
 }
 
 # Call the monitor module
 module "monitor" {
-  source = "./modules/monitor"
+  source     = "./modules/monitor"
   project_id = var.project_id
-  subnet_id = module.network.subnet_asia_id
+  subnet_id  = module.network.subnet_asia_id
 }
-
