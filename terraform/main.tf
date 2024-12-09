@@ -38,18 +38,19 @@ module "compute_us" {
 }
 
 # Call the storage module for US
-module "storage" { #reverted back to original name
+module "storage" {
   source     = "./modules/storage"
   project_id = var.project_id
   region     = var.region # Added region for US
 }
 
 # Call the loadbalancer module for US
-module "loadbalancer" { #reverted back to original name
+module "loadbalancer" {
   source                   = "./modules/loadbalancer"
   region                   = var.region
   project_id               = var.project_id
   mig_us_instance_group    = module.compute_us.instance_group
+  # Removed mig_europe_instance_group from here
 }
 
 # Call the compute module for Europe
@@ -67,28 +68,24 @@ module "monitor" {
   subnet_id  = module.network.subnet_asia_id
 }
 
-
-
 # Call the loadbalancer module for europe
-module "loadbalancer_europe" {  #Renamed to avoid conflict
+module "loadbalancer_europe" { 
   source                   = "./modules/loadbalancer"
   project_id               = var.project_id
   region                   = "europe-west1"
-  mig_europe_instance_group = module.compute_europe.instance_group # THIS WAS THE MISSING ARGUMENT
+  mig_europe_instance_group = module.compute_europe.instance_group 
 }
 
 # Call the storage module for Europe
-module "storage_europe" { #Renamed to avoid conflict
+module "storage_europe" {
   source     = "./modules/storage"
   project_id = var.project_id
-  region     = "europe-west1" # Added region for Europe
+  region     = "europe-west1" 
 }
 
-
-
 # Call the storage module for Asia
-module "storage_asia" { #Renamed to avoid conflict
+module "storage_asia" { 
   source     = "./modules/storage"
   project_id = var.project_id
-  region     = "asia-southeast1" # Added region for Asia
+  region     = "asia-southeast1"
 }
