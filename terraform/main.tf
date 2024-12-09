@@ -65,6 +65,17 @@ module "loadbalancer" {
   project_id            = var.project_id
   region                = var.region
   mig_us_instance_group = module.compute_us.instance_group
+mig_europe_instance_group = null # explicitly set to null since it is optional, this avoids errors during 'terraform plan'
+
+}
+
+# Call the loadbalancer module for europe
+module "loadbalancer_europe" {
+  source                = "./modules/loadbalancer"
+  project_id            = var.project_id
+  region                = "europe-west1"
+mig_us_instance_group = null # explicitly set to null since it is optional
+  mig_europe_instance_group = module.compute_europe.instance_group
 
 }
 
@@ -83,17 +94,6 @@ module "monitor" {
   subnet_id  = module.network.subnet_asia_id
 }
 
-
-
-
-# Call the loadbalancer module for europe
-module "loadbalancer_europe" {
-  source                = "./modules/loadbalancer"
-  project_id            = var.project_id
-  region                = "europe-west1"
-  mig_us_instance_group = module.compute_europe.instance_group
-
-}
 
 # Call the storage module for Europe
 
