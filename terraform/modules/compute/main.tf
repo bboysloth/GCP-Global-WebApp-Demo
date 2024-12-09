@@ -1,10 +1,3 @@
-data "template_file" "startup_script" {
-  template = file("${path.module}/../../../scripts/startup_script.sh")
-  vars = {
-    project_id = var.project_id
-  }
-}
-
 resource "google_compute_instance_template" "default" {
   name           = "web-server-template"
   machine_type   = "e2-micro"
