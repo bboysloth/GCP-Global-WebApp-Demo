@@ -22,8 +22,5 @@ EOT
 
 sudo systemctl restart apache2
 
-# Construct the image URL using the project_id variable
-IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-us-${project_id}/image_bullet.jpg"
-
 # Create the index.html file with the image URL
-echo "<h1>Hello from $(hostname) in $(curl -s http://metadata.google.internal/computeMetadata/v1/instance/zone -H 'Metadata-Flavor: Google')</h1><img src='${IMAGE_URL}'>" > /var/www/html/index.html
+echo "<h1>Hello from $(hostname) in $(curl -s http://metadata.google.internal/computeMetadata/v1/instance/zone -H 'Metadata-Flavor: Google')</h1><img src='https://storage.googleapis.com/gcp-simple-global-web-app-demo-us-${project_id}/image_bullet.jpg'>" > /var/www/html/index.html
