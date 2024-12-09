@@ -1,14 +1,14 @@
-variable "region" {
-  description = "The region where instances will be created"
-  type        = string
+variable "project_id" {
+    type = string
+    description = "The project ID"
 }
 
-variable "project_id" {
-    description = "The project where instances will be created"
-    type = string
+variable "region" {
+  type = string
+  description = "The region for resources"
 }
 
 variable "subnet_id" {
-  description = "The ID of the subnet where instances will be created"
+  description = "Subnet ID"
   type = string
 }
