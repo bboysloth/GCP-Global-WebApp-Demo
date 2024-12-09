@@ -53,10 +53,32 @@ module "compute_us" {
   subnet_id  = module.network.subnet_us_id
 }
 
+# Call the compute module for Europe
+module "compute_europe" {
+  source     = "./modules/compute"
+  region     = "europe-west1"
+  project_id = var.project_id
+  subnet_id  = module.network.subnet_europe_id
+}
+
 # Call the storage module for US
 module "storage" {
   source     = "./modules/storage"
   project_id = var.project_id
+}
+
+# Call the storage module for Europe
+module "storage_europe" { #Renamed to avoid conflict
+  source     = "./modules/storage"
+  project_id = var.project_id
+
+}
+
+# Call the storage module for Asia
+module "storage_asia" { #Renamed to avoid conflict
+  source     = "./modules/storage"
+  project_id = var.project_id
+
 }
 
 # Call the loadbalancer module for US
@@ -79,35 +101,9 @@ module "loadbalancer" {
 
 # }
 
-# Call the compute module for Europe
-module "compute_europe" {
-  source     = "./modules/compute"
-  region     = "europe-west1"
-  project_id = var.project_id
-  subnet_id  = module.network.subnet_europe_id
-}
-
 # Call the monitor module
 module "monitor" {
   source     = "./modules/monitor"
   project_id = var.project_id
   subnet_id  = module.network.subnet_asia_id
-}
-
-
-# Call the storage module for Europe
-
-module "storage_europe" { #Renamed to avoid conflict
-  source     = "./modules/storage"
-  project_id = var.project_id
-
-}
-
-
-
-# Call the storage module for Asia
-module "storage_asia" { #Renamed to avoid conflict
-  source     = "./modules/storage"
-  project_id = var.project_id
-
 }
