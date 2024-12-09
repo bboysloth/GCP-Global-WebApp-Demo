@@ -1,63 +1,61 @@
 #!/bin/bash
 
-sudo chown $USER:$USER /var/www/html  # Change ownership to the current user
-sudo chmod 755 /var/www/html       # Set permissions to allow writing
+# Get the instance's region from metadata server
+REGION=$(curl -s http://metadata.google.internal/computeMetadata/v1/instance/region -H "Metadata-Flavor: Google")
 
-# Metadata server URLs
-METADATA_SERVER="http://metadata.google.internal/computeMetadata/v1/instance/"
-METADATA_HEADERS="Metadata-Flavor: Google"
+# Extract the short region name (e.g., "us-central1" -> "us")
+SHORT_REGION=$(echo "$REGION" | awk -F'/' '{print $4}' | cut -d'-' -f1,2 | tr '-' '_')
 
-# Get instance name
-INSTANCE_NAME=$(curl -s -H "$METADATA_HEADERS" "$${METADATA_SERVER}hostname")
-# Get region
-REGION=$(curl -s -H "$METADATA_HEADERS" "$${METADATA_SERVER}region")
-# Get zone
-ZONE=$(curl -s -H "$METADATA_HEADERS" "$${METADATA_SERVER}zone")
-
-# Extract short region name
-SHORT_REGION=$(echo "$REGION" | awk -F '/' '{print $4}')
-
-# Determine image based on region
-case "$SHORT_REGION" in
-  "us-central1")
-    IMAGE="image_bullet.jpg"
-    ;;
-  "europe-west1")
-    IMAGE="image_dome.jpg"
-    ;;
-
-  "asia-southeast1")
-    IMAGE="image_asia.jpg"
-    ;;
-  *)
-    IMAGE="default_image.jpg"  # Default image if region is not recognized
-    ;;
-
-esac
-
-# Construct the image URL
-IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}/$${IMAGE}"
-
-# Create index.html (escaped double quotes for variables within the echo command)
-cat << EOF > /var/www/html/index.html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Welcome</title>
-</head>
-<body>
-
-  <h1>Welcome to $INSTANCE_NAME in $ZONE</h1>
-  <img src="$IMAGE_URL" alt="Regional Image">
-
-</body>
-</html>
-EOF
-
-
-
-
-# Install apache and start service
 sudo apt-get update
 sudo apt-get install -y apache2
-sudo systemctl start apache2
+sudo a2enmod rewrite
+
+# Use us-central1 instance for image_bullet.jpg
+if [[ "$SHORT_REGION" == "us_central1" ]]; then
+  # Use gsutil to copy the image
+  gsutil cp gs://gcp-simple-global-web-app-demo-${project_id}/image_bullet.jpg /var/www/html/
+fi
+
+# Use europe-west1 instance for image_dome.jpg
+if [[ "$SHORT_REGION" == "europe_west1" ]]; then
+  # Use gsutil to copy the image
+  gsutil cp gs://gcp-simple-global-web-app-demo-${project_id}/image_dome.jpg /var/www/html/
+fi
+
+# Use asia-southeast1 instance for image_asia.jpg
+if [[ "$SHORT_REGION" == "asia_southeast1" ]]; then
+  # Use gsutil to copy the image
+  gsutil cp gs://gcp-simple-global-web-app-demo-${project_id}/image_asia.jpg /var/www/html/
+fi
+
+cat << EOF > /etc/apache2/sites-available/000-default.conf
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+
+    <Directory /var/www/html/>
+
+        RewriteEngine On
+
+        RewriteCond %%{REQUEST_URI} !^/index\.html$
+        RewriteRule ^(.*)$ /index.html [L]
+    </Directory>
+
+    ErrorLog $${APACHE_LOG_DIR}/error.log
+    CustomLog $${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+EOF
+
+sudo chown www-data:www-data /var/www/html # set www-data as owner of the directory
+
+# Create the index.html file with dynamic content and image URL
+
+echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1><img src='/image_bullet.jpg'>" > /var/www/html/index.html
+
+# Change the Europe instances to use image_dome.jpg
+if [[ "$SHORT_REGION" == "europe_west1" ]]; then
+  echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1><img src='/image_dome.jpg'>" > /var/www/html/index.html
+fi
+
+# Change the Asia instances to use image_asia.jpg
