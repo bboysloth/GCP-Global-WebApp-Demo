@@ -12,8 +12,8 @@ resource "google_compute_instance_template" "default" {
 
   metadata = {
     startup-script = templatefile("${path.module}/../../../scripts/startup_script.sh", {
-      project_id = var.project_id,
-      region     = var.region # Pass the region to the startup script
+      project_id = var.project_id, # Make sure this is passed to the script
+      region     = var.region
     })
   }
 }
