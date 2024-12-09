@@ -33,4 +33,5 @@ resource "google_compute_region_instance_group_manager" "mig" {
   }
 
   base_instance_name = "web-server-${var.region}"
+  tags = ["webserver"]
 }
