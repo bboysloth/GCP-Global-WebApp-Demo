@@ -1,20 +1,20 @@
 variable "project_id" {
-    description = "The project ID for the load balancer"
-    type = string
+  type = string
+  description = "The Project ID"
 }
 
 variable "region" {
-    description = "The default region for the load balancer"
-    type = string
+  type = string
+  description = "The region"
 }
 
 variable "mig_us_instance_group" {
-    description = "The instance group for the load balancer in US"
-    type = string
-    default = null # Make the variable optional and default it to a null value
+  type = string
+  description = "The instance group for the load balancer in US",
+  default = null
 }
 
-variable "mig_europe_instance_group" { 
+variable "mig_europe_instance_group" {
   type = string
   description = "Instance group for europe"
   default     = null
