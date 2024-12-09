@@ -50,7 +50,6 @@ module "loadbalancer" {
   region                   = var.region
   project_id               = var.project_id
   mig_us_instance_group    = module.compute_us.instance_group
-  # Removed mig_europe_instance_group from here
 }
 
 # Call the compute module for Europe
