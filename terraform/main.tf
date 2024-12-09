@@ -1,3 +1,6 @@
+
+# Configure the Google Cloud provider
+
 terraform {
   required_providers {
     google = {
@@ -21,10 +24,12 @@ provider "google-beta" {
   region = var.region
 }
 
+# Declare the project_id variable
 variable "project_id" {
   type = string
 }
 
+# Declare the region variable
 variable "region" {
   type        = string
   default     = "us-central1"
@@ -44,6 +49,21 @@ module "compute_us" {
   subnet_id  = module.network.subnet_us_id
 }
 
+# Call the storage module for US
+module "storage" {
+  source     = "./modules/storage"
+  project_id = var.project_id
+}
+
+# Call the loadbalancer module for US
+module "loadbalancer" {
+  source                = "./modules/loadbalancer"
+  project_id            = var.project_id
+  region                = var.region
+  mig_us_instance_group = module.compute_us.instance_group
+
+}
+
 # Call the compute module for Europe
 module "compute_europe" {
   source     = "./modules/compute"
@@ -59,19 +79,8 @@ module "monitor" {
   subnet_id  = module.network.subnet_asia_id
 }
 
-module "storage" {
-  source     = "./modules/storage"
-  project_id = var.project_id
-}
 
-# Call the loadbalancer module for US
-module "loadbalancer" {
-  source                = "./modules/loadbalancer"
-  project_id            = var.project_id
-  region                = var.region
-  mig_us_instance_group = module.compute_us.instance_group
 
-}
 
 # Call the loadbalancer module for europe
 module "loadbalancer_europe" {
@@ -79,5 +88,22 @@ module "loadbalancer_europe" {
   project_id            = var.project_id
   region                = "europe-west1"
   mig_us_instance_group = module.compute_europe.instance_group
+
+}
+
+# Call the storage module for Europe
+
+module "storage_europe" { #Renamed to avoid conflict
+  source     = "./modules/storage"
+  project_id = var.project_id
+
+}
+
+
+
+# Call the storage module for Asia
+module "storage_asia" { #Renamed to avoid conflict
+  source     = "./modules/storage"
+  project_id = var.project_id
 
 }
