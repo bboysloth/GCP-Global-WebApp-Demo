@@ -1,4 +1,9 @@
 variable "project_id" {
-    description = "The project ID for the storage buckets"
     type = string
+    description = "The Project ID"
+}
+
+variable "region" {
+  type = string
+  description = "The region"
 }
