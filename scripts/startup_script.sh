@@ -51,3 +51,6 @@ IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${proje
 echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1><img src='$IMAGE_URL'>" > /var/www/html/index.html
 
 sudo systemctl restart apache2
+
+# TEST for access to the images bucket
+gsutil ls gs://gcp-simple-global-web-app-demo-${project_id}
