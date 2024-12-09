@@ -28,3 +28,6 @@ resource "google_compute_subnetwork" "subnet_asia" {
  region = "asia-southeast1"
   network       = google_compute_network.vpc_network.id
 }
+
+
+# Firewall Rules are Defined in their own file to clarity 'firewall.tf'
