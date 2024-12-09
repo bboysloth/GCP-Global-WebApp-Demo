@@ -31,11 +31,21 @@ module "network" {
 
 # Call the compute module
 module "compute" {
-  source           = "./modules/compute"
-  region           = var.region
-  project_id       = var.project_id
-  subnet_us_id     = module.network.subnet_us_id
-  subnet_europe_id = module.network.subnet_europe_id
+  source     = "./modules/compute"
+  region     = var.region
+  project_id = var.project_id
+
+  subnet_id     = module.network.subnet_us_id # For us-central1
+}
+
+# Compute Module for Europe (explicit)
+
+module "compute" {
+  source     = "./modules/compute"
+  region     = "europe-west1" # Explicitly set the region for europe-west1
+  project_id = var.project_id
+
+  subnet_id = module.network.subnet_europe_id # For europe-west1
 }
 
 # Call the storage module
