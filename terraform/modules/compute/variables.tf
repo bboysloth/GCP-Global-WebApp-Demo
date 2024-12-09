@@ -7,8 +7,3 @@ variable "region" {
   type = string
   description = "The region for resources"
 }
-
-variable "subnet_id" {
-  description = "Subnet ID"
-  type = string
-}
