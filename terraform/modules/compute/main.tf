@@ -17,6 +17,9 @@ resource "google_compute_instance_template" "default" {
         region     = var.region,
     })
   }
+
+  tags = ["webserver"]
+
 }
 
 resource "google_compute_region_instance_group_manager" "mig" {
@@ -33,5 +36,5 @@ resource "google_compute_region_instance_group_manager" "mig" {
   }
 
   base_instance_name = "web-server-${var.region}"
-  tags = ["webserver"]
+
 }
