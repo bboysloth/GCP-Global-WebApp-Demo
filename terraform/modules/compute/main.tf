@@ -15,7 +15,6 @@ resource "google_compute_instance_template" "default" {
     startup-script = "../../../scripts/startup_script.sh"
   }
 }
-}
 
 resource "google_compute_region_instance_group_manager" "us_mig" {
   provider = google-beta
