@@ -1,5 +1,5 @@
 data "template_file" "startup_script" {
-  template = file("${path.module}/../../../scripts/startup_script.sh")
+  template = templatefile("${path.module}/../../../scripts/startup_script.sh")
   vars = {
     project_id = var.project_id
   }
