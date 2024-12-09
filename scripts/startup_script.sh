@@ -37,14 +37,14 @@ elif [[ "$SHORT_REGION" == "europe_west1" ]]; then
 
   IMAGE="image_dome.jpg"
 elif [[ "$SHORT_REGION" == "asia_southeast1" ]]; then
-    IMAGE="image_eye.jpg"
+    IMAGE="image_asia.jpg"
 else
 
   echo "Unknown region: $SHORT_REGION"
   exit 1
 fi
 
-IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-$SHORT_REGION-${project_id}/$IMAGE"
+IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}/$IMAGE" # Use project_id variable here
 
 # Create the index.html file with dynamic content and image URL
 
