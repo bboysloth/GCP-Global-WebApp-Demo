@@ -61,23 +61,23 @@ module "storage" {
 
 # Call the loadbalancer module for US
 module "loadbalancer" {
-  source                = "./modules/loadbalancer"
-  project_id            = var.project_id
-  region                = var.region
+  source = "./modules/loadbalancer"
+  project_id = var.project_id
+  region = var.region
   mig_us_instance_group = module.compute_us.instance_group
-mig_europe_instance_group = null # explicitly set to null since it is optional, this avoids errors during 'terraform plan'
-
-}
-
-# Call the loadbalancer module for europe
-module "loadbalancer_europe" {
-  source                = "./modules/loadbalancer"
-  project_id            = var.project_id
-  region                = "europe-west1"
-mig_us_instance_group = null # explicitly set to null since it is optional
   mig_europe_instance_group = module.compute_europe.instance_group
 
 }
+
+# Call the loadbalancer module for europe, this will be removed because we are now using a global loadbalancer instead of a regional one
+# module "loadbalancer_europe" {
+#   source = "./modules/loadbalancer"
+#   project_id = var.project_id
+#   region = "europe-west1"
+# mig_us_instance_group = null # explicitly set to null since it is optional
+#   mig_europe_instance_group = module.compute_europe.instance_group
+
+# }
 
 # Call the compute module for Europe
 module "compute_europe" {
