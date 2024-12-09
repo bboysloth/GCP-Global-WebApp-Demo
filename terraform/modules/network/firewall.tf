@@ -62,8 +62,6 @@ resource "google_compute_firewall" "allow_internal" {
  protocol = "all"
  }
 
-
-
  source_ranges = [
 
  "10.0.1.0/24", # us-central1 subnet
@@ -72,4 +70,25 @@ resource "google_compute_firewall" "allow_internal" {
 
  ]
  target_tags = ["webserver"] # Added target tag for this firewall rule
+}
+
+resource "google_compute_firewall" "allow_health_check" {
+  project               = var.project_id
+  name                  = "allow-health-check"
+  network = google_compute_network.vpc_network.name 
+  description = "Allow health check traffic"  
+  priority    = 1000
+  direction = "INGRESS"
+  # Use target tags for health checks instead of source IP ranges if needed.
+  target_tags = ["webserver"]
+  source_ranges = [
+    "35.191.0.0/16",
+    "130.211.0.0/22",
+    "209.85.152.0/22",
+    "209.85.204.0/22" # GCP health check ranges
+  ]
+
+  allow {
+    protocol = "tcp"
+  }
 }
