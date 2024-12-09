@@ -18,4 +18,4 @@ cat <<EOT > /etc/apache2/sites-available/000-default.conf
 </VirtualHost>
 EOT
 sudo systemctl restart apache2
-echo "<h1>Hello from $(hostname) in $(curl -s http://metadata.google.internal/computeMetadata/v1/instance/zone -H 'Metadata-Flavor: Google')</h1><img src='https://storage.googleapis.com/gcp-simple-global-web-app-demo-us-${PROJECT_ID}/image_bullet.jpg'>" > /var/www/html/index.html
+echo "<h1>Hello from $(hostname) in $(curl -s http://metadata.google.internal/computeMetadata/v1/instance/zone -H 'Metadata-Flavor: Google')</h1><img src='https://storage.googleapis.com/gcp-simple-global-web-app-demo-us-${project_id}/image_bullet.jpg'>" > /var/www/html/index.html
