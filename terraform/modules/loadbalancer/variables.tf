@@ -12,9 +12,3 @@ variable "mig_us_instance_group" {
     description = "The instance group for the load balancer in US"
     type = string
 }
-
-variable "mig_europe_instance_group" {
-    description = "The instance group for the load balancer in Europe"
-    type = string
-
-}
