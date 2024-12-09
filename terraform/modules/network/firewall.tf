@@ -45,3 +45,31 @@ resource "google_compute_firewall" "allow_https" {
   }
   source_ranges = ["0.0.0.0/0"] 
 }
+
+# Allow internal traffic within the VPC network
+resource "google_compute_firewall" "allow_internal" {
+
+ project = var.project_id
+ name = "allow-internal"
+ network = google_compute_network.vpc_network.name
+
+ description = "Allow internal traffic on the network"
+
+ priority = 65534
+ direction = "INGRESS"
+
+ allow {
+ protocol = "all"
+ }
+
+
+
+ source_ranges = [
+
+ "10.0.1.0/24", # us-central1 subnet
+ "10.0.2.0/24", # europe-west1 subnet
+ "10.0.3.0/24"  # asia-southeast1 subnet
+
+ ]
+ target_tags = ["webserver"] # Added target tag for this firewall rule
+}
