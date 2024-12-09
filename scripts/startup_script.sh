@@ -37,12 +37,12 @@ cat << EOF > /etc/apache2/sites-available/000-default.conf
 
         RewriteEngine On
 
-        RewriteCond %{REQUEST_URI} !^/index\.html$
+        RewriteCond %%{REQUEST_URI} !^/index\.html$
         RewriteRule ^(.*)$ /index.html [L]
     </Directory>
 
-    ErrorLog \${APACHE_LOG_DIR}/error.log
-    CustomLog \${APACHE_LOG_DIR}/access.log combined
+    ErrorLog $${APACHE_LOG_DIR}/error.log
+    CustomLog $${APACHE_LOG_DIR}/access.log combined
 
 </VirtualHost>
 EOF
@@ -59,3 +59,6 @@ if [[ "$SHORT_REGION" == "europe_west1" ]]; then
 fi
 
 # Change the Asia instances to use image_asia.jpg
+if [[ "$SHORT_REGION" == "asia_southeast1" ]]; then
+  echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1><img src='/image_asia.jpg'>" > /var/www/html/index.html
+fi
