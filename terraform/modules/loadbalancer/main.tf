@@ -20,7 +20,7 @@ resource "google_compute_region_backend_service" "backend_service_us" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   backend {
-    group           = var.mig_us_self_link
+    group           = google_compute_region_instance_group_manager.us_mig.instance_group
     balancing_mode  = "UTILIZATION"
     max_utilization = 0.8
     capacity_scaler = 1.0
@@ -37,7 +37,7 @@ resource "google_compute_region_backend_service" "backend_service_europe" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   backend {
-    group           = var.mig_europe_self_link
+    group           = google_compute_region_instance_group_manager.europe_mig.instance_group
     balancing_mode  = "UTILIZATION"
     max_utilization = 0.8
     capacity_scaler = 1.0
