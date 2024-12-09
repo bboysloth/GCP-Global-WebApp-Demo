@@ -19,7 +19,9 @@ resource "google_compute_instance_template" "default" {
 
 # startup script moved to main/scripts/startup_script.sh
   metadata = {
-    startup-script = data.template_file.startup_script.rendered
+    startup-script = templatefile("${path.module}/../../../scripts/startup_script.sh", {
+      project_id = var.project_id
+    })
   }
 }
 
