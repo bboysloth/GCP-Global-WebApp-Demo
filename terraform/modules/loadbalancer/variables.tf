@@ -8,12 +8,12 @@ variable "region" {
     type = string
 }
 
-variable "mig_us_self_link" {
+variable "mig_us_instance_group" {
     description = "The self link of the MIG in the US"
     type = string
 }
 
-variable "mig_europe_self_link" {
+variable "mig_europe_instance_group" {
     description = "The self link of the MIG in Europe"
     type = string
 }
