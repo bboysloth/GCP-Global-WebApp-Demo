@@ -6,9 +6,9 @@ resource "google_compute_http_health_check" "http_health_check" { # Corrected re
  timeout_sec         = 3
  check_interval_sec  = 5
 
- # http_health_check {
- #  port = 80
- # }
+ http_health_check {
+   port = 80
+ }
 }
 
 resource "google_compute_backend_service" "backend_service" { # Global backend service
