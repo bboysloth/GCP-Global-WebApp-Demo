@@ -37,12 +37,12 @@ cat << EOF > /etc/apache2/sites-available/000-default.conf
 
         RewriteEngine On
 
-        RewriteCond %%{REQUEST_URI} !^/index\.html$
+        RewriteCond %{REQUEST_URI} !^/index\.html$
         RewriteRule ^(.*)$ /index.html [L]
     </Directory>
 
-    ErrorLog $${APACHE_LOG_DIR}/error.log
-    CustomLog $${APACHE_LOG_DIR}/access.log combined
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
 
 </VirtualHost>
 EOF
