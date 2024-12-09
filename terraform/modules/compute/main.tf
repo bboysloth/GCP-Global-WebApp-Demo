@@ -6,8 +6,9 @@ resource "google_compute_instance_template" "default" {
     auto_delete  = true
     boot         = true
   }
-  network_interface {
-    # We will specify the subnet in the instance group resource
+
+  network_interface { # Network interface should be defined here in the instance template
+    subnetwork = var.subnet_id
   }
 
   metadata = {
@@ -30,11 +31,8 @@ resource "google_compute_region_instance_group_manager" "us_mig" {
 
   base_instance_name = "web-server-us"
 
-  wait_for_instances = false # prevents errors when initially creating the template and associated MIGs
+  wait_for_instances = false # Added this line to prevent errors
 
-  network_interface { # Added network interface to instance group
-    subnetwork = var.subnet_us_id
-  }
 }
 
 resource "google_compute_region_instance_group_manager" "europe_mig" {
@@ -50,9 +48,5 @@ resource "google_compute_region_instance_group_manager" "europe_mig" {
 
   base_instance_name = "web-server-europe"
 
-  wait_for_instances = false # prevents errors when initially creating the template and associated MIGs
-
-  network_interface { # Added network interface to instance group
-    subnetwork = var.subnet_europe_id
-  }
+  wait_for_instances = false
 }
