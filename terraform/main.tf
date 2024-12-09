@@ -46,13 +46,13 @@ module "storage" {
 
 # Call the loadbalancer module
 module "loadbalancer" {
-  source              = "./modules/loadbalancer"
-  region              = var.region
-  project_id          = var.project_id
-  subnet_us_id        = module.network.subnet_us_id
-  subnet_europe_id    = module.network.subnet_europe_id
-  mig_us_self_link    = module.compute.mig_us_self_link
-  mig_europe_self_link = module.compute.mig_europe_self_link
+  source                   = "./modules/loadbalancer"
+  region                   = var.region
+  project_id               = var.project_id
+  subnet_us_id             = module.network.subnet_us_id
+  subnet_europe_id         = module.network.subnet_europe_id
+  mig_us_instance_group    = module.compute.mig_us_instance_group
+  mig_europe_instance_group = module.compute.mig_europe_instance_group
 }
 
 # Call the monitor module
