@@ -1,14 +1,15 @@
-# Initial Main.tf for defining the providers, and calling all Modules
+
+# Configure the Google Cloud provider
 
 terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 4.0.0, < 5.0.0"
+      version = "~> 4.0"
     }
     google-beta = {
-      source = "hashicorp/google-beta"
-      version = ">=4.0.0, < 5.0.0"
+      source  = "hashicorp/google-beta"
+      version = "~> 4.0"
     }
   }
 }
@@ -32,7 +33,7 @@ module "network" {
 # Call the compute module for US
 module "compute_us" {
   source     = "./modules/compute"
-  region     = var.region          # us-central1
+  region     = var.region
   project_id = var.project_id
   subnet_id  = module.network.subnet_us_id
 }
@@ -40,7 +41,7 @@ module "compute_us" {
 # Call the compute module for Europe
 module "compute_europe" {
   source     = "./modules/compute"
-  region     = "europe-west1"      # Explicitly set for Europe
+  region     = "europe-west1" # Explicit region for Europe
   project_id = var.project_id
   subnet_id  = module.network.subnet_europe_id
 }
@@ -51,15 +52,22 @@ module "storage" {
   project_id = var.project_id
 }
 
-# Call the loadbalancer module
+# Call the loadbalancer module for default (US)
 module "loadbalancer" {
   source                   = "./modules/loadbalancer"
   region                   = var.region
   project_id               = var.project_id
-  subnet_us_id             = module.network.subnet_us_id
-  subnet_europe_id         = module.network.subnet_europe_id
-  mig_us_instance_group    = module.compute_us.mig_us_instance_group # Updated reference
-  mig_europe_instance_group = module.compute_europe.mig_europe_instance_group # Updated reference
+
+  mig_us_instance_group    = module.compute_us.instance_group
+}
+
+# Call the loadbalancer module for europe
+module "loadbalancer_europe" {
+  source                   = "./modules/loadbalancer"
+  region                   = "europe-west1"
+  project_id               = var.project_id
+  
+  mig_europe_instance_group = module.compute_europe.instance_group
 }
 
 # Call the monitor module
