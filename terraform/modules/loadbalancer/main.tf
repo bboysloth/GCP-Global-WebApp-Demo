@@ -1,4 +1,3 @@
-
 resource "google_compute_health_check" "http_health_check" {
   project             = var.project_id
   name                = "web-server-health-check"
@@ -12,34 +11,36 @@ resource "google_compute_health_check" "http_health_check" {
 }
 
 resource "google_compute_region_backend_service" "backend_service_us" {
-  provider = google-beta
-  project             = var.project_id
-  name                = "web-server-backend-us"
-  region              = "us-central1"
-  protocol            = "HTTP"
-  health_checks       = [google_compute_health_check.http_health_check.id]
+  provider              = google-beta
+  project               = var.project_id
+  name                  = "web-server-backend-us"
+  region                = "us-central1"
+  protocol              = "HTTP"
+  health_checks         = [google_compute_health_check.http_health_check.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   backend {
     group           = var.mig_us_self_link
     balancing_mode  = "UTILIZATION"
     max_utilization = 0.8
+    capacity_scaler = 1.0
   }
 }
 
 resource "google_compute_region_backend_service" "backend_service_europe" {
-  provider = google-beta
-  project             = var.project_id
-  name                = "web-server-backend-europe"
-  region              = "europe-west1"
-  protocol            = "HTTP"
-  health_checks       = [google_compute_health_check.http_health_check.id]
+  provider              = google-beta
+  project               = var.project_id
+  name                  = "web-server-backend-europe"
+  region                = "europe-west1"
+  protocol              = "HTTP"
+  health_checks         = [google_compute_health_check.http_health_check.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   backend {
     group           = var.mig_europe_self_link
     balancing_mode  = "UTILIZATION"
     max_utilization = 0.8
+    capacity_scaler = 1.0
   }
 }
 
@@ -85,6 +86,6 @@ resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
 }
 
 resource "google_compute_global_address" "web_server_lb_ip" {
-    project = var.project_id
-    name = "web-server-lb-ip"
+  project = var.project_id
+  name    = "web-server-lb-ip"
 }
