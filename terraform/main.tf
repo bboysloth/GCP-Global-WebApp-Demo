@@ -1,5 +1,3 @@
-# Configure the Google Cloud provider
-
 terraform {
   required_providers {
     google = {
@@ -23,6 +21,15 @@ provider "google-beta" {
   region = var.region
 }
 
+variable "project_id" {
+  type = string
+}
+
+variable "region" {
+  type        = string
+  default     = "us-central1"
+}
+
 # Call the network module
 module "network" {
   source     = "./modules/network"
@@ -37,25 +44,10 @@ module "compute_us" {
   subnet_id  = module.network.subnet_us_id
 }
 
-# Call the storage module for US
-module "storage" {
-  source     = "./modules/storage"
-  project_id = var.project_id
-  region     = var.region # Added region for US
-}
-
-# Call the loadbalancer module for US
-module "loadbalancer" {
-  source                = "./modules/loadbalancer"
-  region                = var.region
-  project_id            = var.project_id
-  mig_us_instance_group = module.compute_us.instance_group
-}
-
 # Call the compute module for Europe
 module "compute_europe" {
   source     = "./modules/compute"
-  region     = "europe-west1" # Explicit region for Europe
+  region     = "europe-west1"
   project_id = var.project_id
   subnet_id  = module.network.subnet_europe_id
 }
@@ -67,24 +59,25 @@ module "monitor" {
   subnet_id  = module.network.subnet_asia_id
 }
 
+module "storage" {
+  source     = "./modules/storage"
+  project_id = var.project_id
+}
+
+# Call the loadbalancer module for US
+module "loadbalancer" {
+  source                = "./modules/loadbalancer"
+  project_id            = var.project_id
+  region                = var.region
+  mig_us_instance_group = module.compute_us.instance_group
+
+}
+
 # Call the loadbalancer module for europe
 module "loadbalancer_europe" {
   source                = "./modules/loadbalancer"
   project_id            = var.project_id
   region                = "europe-west1"
-  mig_us_instance_group = module.compute_europe.instance_group # Use mig_us_instance_group variable here because that is the variable defined in variables.tf
-}
+  mig_us_instance_group = module.compute_europe.instance_group
 
-# Call the storage module for Europe
-module "storage_europe" {
-  source     = "./modules/storage"
-  project_id = var.project_id
-  region     = "europe-west1" 
-}
-
-# Call the storage module for Asia
-module "storage_asia" {
-  source     = "./modules/storage"
-  project_id = var.project_id
-  region     = "asia-southeast1"
 }
