@@ -92,3 +92,33 @@ resource "google_compute_firewall" "allow_health_check" {
     protocol = "tcp"
   }
 }
+
+resource "google_compute_firewall" "allow_internal" {
+  project     = var.project_id
+  name        = "terraform-demo-allow-internal"
+  network     = google_compute_network.vpc_network.name
+  description = "Allow internal traffic on the custom VPC network"
+  priority    = 65534  # Keep the same high priority
+  direction   = "INGRESS"
+
+  # Use the correct subnet CIDR blocks for your custom VPC instead
+  source_ranges = [
+    "10.0.1.0/24",  # us-central1 subnet
+    "10.0.2.0/24",  # europe-west1 subnet
+    "10.0.3.0/24"   # asia-southeast1 subnet
+  ]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["0-65535"]  # Allow all TCP ports
+  }
+
+  allow {
+    protocol = "udp"
+    ports    = ["0-65535"]  # Allow all UDP ports
+  }
+
+  allow {
+    protocol = "icmp"       # Allow ICMP (ping, etc.)
+  }
+}
