@@ -20,11 +20,14 @@ resource "google_compute_region_backend_service" "backend_service" {
   health_checks       = [google_compute_region_health_check.http_health_check.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
-  backend {
-    group           = var.mig_us_instance_group # Correct: Use mig_us_instance_group here
-    balancing_mode  = "UTILIZATION"
-    capacity_scaler = 1.0
-    max_utilization = 0.8
+  dynamic "backend" { # Use dynamic block for conditional backend configuration
+    for_each = var.mig_us_instance_group != null ? [1] : [] # Create a backend only if mig_us_instance_group is defined
+      content {
+        group           = var.mig_us_instance_group != null ? var.mig_us_instance_group : var.mig_europe_instance_group # Use conditional to assign the appropriate value.
+        balancing_mode  = "UTILIZATION"
+        capacity_scaler = 1.0
+        max_utilization = 0.8
+      }
   }
 }
 
