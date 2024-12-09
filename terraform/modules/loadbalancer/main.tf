@@ -1,13 +1,12 @@
 resource "google_compute_http_health_check" "http_health_check" {
-  project             = var.project_id
+ project             = var.project_id
  name                = "web-server-health-check-global"
- healthy_threshold   = 1
- unhealthy_threshold = 3
- timeout_sec         = 3
- check_interval_sec  = 5
- http_health_check {
-   port = "80"
- }
+ check_interval_sec  = 1
+ timeout_sec         = 1
+ healthy_threshold   = 2
+ unhealthy_threshold = 2
+
+ request_path = "/"  #  Added a required field
 }
 
 resource "google_compute_backend_service" "backend_service" {
