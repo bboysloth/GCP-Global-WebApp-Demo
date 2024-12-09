@@ -27,26 +27,32 @@ variable "region" {
   default = "us-central1"
 }
 
-
+# Call the network module
+module "network" {
+  source     = "./modules/network"
+  project_id = var.project_id
+}
 
 # Compute instances
 module "compute_us" {
   source     = "./modules/compute"
   region     = var.region
   project_id = var.project_id
+  subnet_id  = module.network.subnet_us_id  # Pass the correct subnet ID
 }
 
 module "compute_europe" {
   source     = "./modules/compute"
   region     = "europe-west1"
   project_id = var.project_id
-
+  subnet_id  = module.network.subnet_europe_id # Pass the correct subnet ID
 }
 
 module "compute_asia" {
   source     = "./modules/compute"
   region     = "asia-southeast1"
   project_id = var.project_id
+  subnet_id  = module.network.subnet_asia_id # Pass the correct subnet ID
 }
 
 # Storage Bucket (single bucket for all regions)
@@ -62,5 +68,4 @@ module "loadbalancer" {
   mig_us_instance_group    = module.compute_us.instance_group
   mig_europe_instance_group = module.compute_europe.instance_group
   mig_asia_instance_group = module.compute_asia.instance_group
-
 }
