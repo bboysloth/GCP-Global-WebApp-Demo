@@ -7,10 +7,9 @@ resource "google_compute_instance_template" "default" {
     boot         = true
   }
   network_interface {
-    subnetwork = var.subnet_id # Use subnet_id from module input
+    subnetwork = var.subnet_id
   }
 
-  # Startup script (using templatefile)
   metadata = {
     startup-script = templatefile("${path.module}/../../../scripts/startup_script.sh",
       {
@@ -23,23 +22,10 @@ resource "google_compute_instance_template" "default" {
 resource "google_compute_region_instance_group_manager" "mig" {
   provider = google-beta
   project = var.project_id
-  name     = "web-server-mig-${var.region}"
-  region   = var.region
-  wait_for_instances = false
-  version {
-    instance_template = google_compute_instance_template.default.id
-    name              = "primary"
-  }
-
-  base_instance_name = "web-server-${var.region}"
-}
-
-resource "google_compute_region_instance_group_manager" "mig" {
-  provider = google-beta
-    project = var.project_id
-  name     = "web-server-mig-${var.region}"
-  region   = var.region
+ name     = "web-server-mig-${var.region}" # Unique name based on region
+ region   = var.region
  wait_for_instances = false
+
   version {
     instance_template = google_compute_instance_template.default.id
     name              = "primary"
