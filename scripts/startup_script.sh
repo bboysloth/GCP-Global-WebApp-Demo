@@ -33,7 +33,7 @@ case "$SHORT_REGION" in
 esac
 
 # Construct the image URL
-IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}/${IMAGE}"
+IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}/$${IMAGE}"
 
 # Create index.html (escaped double quotes for variables within the echo command)
 cat << EOF > /var/www/html/index.html
