@@ -46,10 +46,10 @@ module "storage" {
 
 # Call the loadbalancer module for US
 module "loadbalancer" {
-  source                   = "./modules/loadbalancer"
-  region                   = var.region
-  project_id               = var.project_id
-  mig_us_instance_group    = module.compute_us.instance_group
+  source                = "./modules/loadbalancer"
+  region                = var.region
+  project_id            = var.project_id
+  mig_us_instance_group = module.compute_us.instance_group
 }
 
 # Call the compute module for Europe
@@ -72,7 +72,7 @@ module "loadbalancer_europe" {
   source                = "./modules/loadbalancer"
   project_id            = var.project_id
   region                = "europe-west1"
-  mig_europe_instance_group = module.compute_europe.instance_group # Use mig_europe_instance_group variable here
+  mig_us_instance_group = module.compute_europe.instance_group # Use mig_us_instance_group variable here because that is the variable defined in variables.tf
 }
 
 # Call the storage module for Europe
@@ -83,7 +83,7 @@ module "storage_europe" {
 }
 
 # Call the storage module for Asia
-module "storage_asia" { 
+module "storage_asia" {
   source     = "./modules/storage"
   project_id = var.project_id
   region     = "asia-southeast1"
