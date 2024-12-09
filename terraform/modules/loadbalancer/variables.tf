@@ -10,7 +10,7 @@ variable "region" {
 
 variable "mig_us_instance_group" {
   type = string
-  description = "The instance group for the load balancer in US",
+  description = "The instance group for the load balancer in US"
   default = null
 }
 
