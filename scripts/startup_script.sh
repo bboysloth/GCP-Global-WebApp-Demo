@@ -44,12 +44,10 @@ else
   exit 1
 fi
 
-IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}/$IMAGE" # Use project_id variable here
+IMAGE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}/$IMAGE"
 
 # Create the index.html file with dynamic content and image URL
 
 echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1><img src='$IMAGE_URL'>" > /var/www/html/index.html
-
-
 
 sudo systemctl restart apache2
