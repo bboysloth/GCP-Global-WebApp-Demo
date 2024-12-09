@@ -1,5 +1,8 @@
 #!/bin/bash
 
+sudo chown $USER:$USER /var/www/html  # Change ownership to the current user
+sudo chmod 755 /var/www/html       # Set permissions to allow writing
+
 # Metadata server URLs
 METADATA_SERVER="http://metadata.google.internal/computeMetadata/v1/instance/"
 METADATA_HEADERS="Metadata-Flavor: Google"
