@@ -1,7 +1,7 @@
-resource "google_compute_region_health_check" "http_health_check_us" {
+resource "google_compute_region_health_check" "http_health_check" {
   project             = var.project_id
-  name                = "web-server-health-check-us"
-  region              = "us-central1"
+  name                = "web-server-health-check-${var.region}" # Regional health check
+  region              = var.region                              # Use variable for region
   healthy_threshold   = 1
   unhealthy_threshold = 3
   timeout_sec         = 3
@@ -11,95 +11,62 @@ resource "google_compute_region_health_check" "http_health_check_us" {
   }
 }
 
-resource "google_compute_region_health_check" "http_health_check_europe" {
-  project             = var.project_id
-  name                = "web-server-health-check-europe"
-  region              = "europe-west1"
-  healthy_threshold   = 1
-  unhealthy_threshold = 3
-  timeout_sec         = 3
-  check_interval_sec  = 5
-  http_health_check {
-    port = "80"
-  }
-}
-
-resource "google_compute_region_backend_service" "backend_service_us" {
+resource "google_compute_region_backend_service" "backend_service" {
   provider = google-beta
   project             = var.project_id
-  name                = "web-server-backend-us"
-  region              = "us-central1"
+  name                = "web-server-backend-${var.region}" # Regional backend service
+  region              = var.region                          # Use variable for region
   protocol            = "HTTP"
-  health_checks       = [google_compute_region_health_check.http_health_check_us.id]
+  health_checks       = [google_compute_region_health_check.http_health_check.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   backend {
-    group           = var.mig_us_instance_group
+    group           = var.mig_instance_group
     balancing_mode  = "UTILIZATION"
     capacity_scaler = 1.0
     max_utilization = 0.8
   }
 }
 
-resource "google_compute_region_backend_service" "backend_service_europe" {
-  provider = google-beta
-  project             = var.project_id
-  name                = "web-server-backend-europe"
-  region              = "europe-west1"
-  protocol            = "HTTP"
-  health_checks       = [google_compute_region_health_check.http_health_check_europe.id]
-  load_balancing_scheme = "EXTERNAL_MANAGED"
 
-  backend {
-    group           = var.mig_europe_instance_group
-    balancing_mode  = "UTILIZATION"
-    capacity_scaler = 1.0
-    max_utilization = 0.8
-  }
-}
 
 resource "google_compute_url_map" "url_map" {
-  project         = var.project_id
-  name            = "web-server-url-map"
-  default_service = google_compute_region_backend_service.backend_service_us.id
+ project         = var.project_id
+ name            = "web-server-url-map"
+ default_service = google_compute_region_backend_service.backend_service.id
 
-  host_rule {
-    hosts        = ["*"]
-    path_matcher = "allpaths"
-  }
+ host_rule {
+   hosts        = ["*"]
+   path_matcher = "allpaths"
+ }
 
-  path_matcher {
-    name            = "allpaths"
-    default_service = google_compute_region_backend_service.backend_service_us.id
+ path_matcher {
+   name            = "allpaths"
+   default_service = google_compute_region_backend_service.backend_service.id
 
-    path_rule {
-      paths   = ["/us/*"]
-      service = google_compute_region_backend_service.backend_service_us.id
-    }
-
-    path_rule {
-      paths   = ["/europe/*"]
-      service = google_compute_region_backend_service.backend_service_europe.id
-    }
-  }
+ }
 }
 
 resource "google_compute_target_http_proxy" "http_proxy" {
-  project  = var.project_id
-  name     = "web-server-http-proxy"
-  url_map  = google_compute_url_map.url_map.id
+ project  = var.project_id
+ name     = "web-server-http-proxy"
+ url_map  = google_compute_url_map.url_map.id
 }
 
 resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
-  project               = var.project_id
-  name                  = "web-server-forwarding-rule"
-  target                = google_compute_target_http_proxy.http_proxy.id
-  port_range            = "80"
-  load_balancing_scheme = "EXTERNAL_MANAGED"
-  ip_address            = google_compute_global_address.web_server_lb_ip.address
+
+ project               = var.project_id
+ name                  = "web-server-forwarding-rule"
+ target                = google_compute_target_http_proxy.http_proxy.id
+ port_range            = "80"
+ load_balancing_scheme = "EXTERNAL_MANAGED"
+ ip_address            = google_compute_global_address.web_server_lb_ip.address
+
 }
 
 resource "google_compute_global_address" "web_server_lb_ip" {
-  project = var.project_id
-  name    = "web-server-lb-ip"
+
+ project = var.project_id
+ name    = "web-server-lb-ip"
+
 }
