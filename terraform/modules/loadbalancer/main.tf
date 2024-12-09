@@ -11,40 +11,41 @@ resource "google_compute_health_check" "http_health_check" {
 }
 
 resource "google_compute_region_backend_service" "backend_service_us" {
-  provider              = google-beta
-  project               = var.project_id
-  name                  = "web-server-backend-us"
-  region                = "us-central1"
-  protocol              = "HTTP"
-  health_checks         = [google_compute_health_check.http_health_check.id]
+  provider = google-beta
+  project             = var.project_id
+  name                = "web-server-backend-us"
+  region              = "us-central1"
+  protocol            = "HTTP"
+  health_checks       = [google_compute_health_check.http_health_check.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   backend {
-    group           = google_compute_region_instance_group_manager.us_mig.instance_group
+    group           = var.mig_us_instance_group
     balancing_mode  = "UTILIZATION"
+    capacity_scaler = 1.0 # Must be > 0
     max_utilization = 0.8
-    capacity_scaler = 1.0
   }
 }
 
 resource "google_compute_region_backend_service" "backend_service_europe" {
-  provider              = google-beta
-  project               = var.project_id
-  name                  = "web-server-backend-europe"
-  region                = "europe-west1"
-  protocol              = "HTTP"
-  health_checks         = [google_compute_health_check.http_health_check.id]
+  provider = google-beta
+  project             = var.project_id
+  name                = "web-server-backend-europe"
+  region              = "europe-west1"
+  protocol            = "HTTP"
+  health_checks       = [google_compute_health_check.http_health_check.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   backend {
-    group           = google_compute_region_instance_group_manager.europe_mig.instance_group
+    group           = var.mig_europe_instance_group
     balancing_mode  = "UTILIZATION"
-    max_utilization = 0.8
     capacity_scaler = 1.0
+    max_utilization = 0.8
   }
 }
 
 resource "google_compute_url_map" "url_map" {
+
   project         = var.project_id
   name            = "web-server-url-map"
   default_service = google_compute_region_backend_service.backend_service_us.id
@@ -67,8 +68,11 @@ resource "google_compute_url_map" "url_map" {
       paths   = ["/europe/*"]
       service = google_compute_region_backend_service.backend_service_europe.id
     }
+
   }
 }
+
+
 
 resource "google_compute_target_http_proxy" "http_proxy" {
   project  = var.project_id
@@ -77,6 +81,7 @@ resource "google_compute_target_http_proxy" "http_proxy" {
 }
 
 resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
+
   project               = var.project_id
   name                  = "web-server-forwarding-rule"
   target                = google_compute_target_http_proxy.http_proxy.id
@@ -85,7 +90,10 @@ resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
   ip_address            = google_compute_global_address.web_server_lb_ip.address
 }
 
+
+
 resource "google_compute_global_address" "web_server_lb_ip" {
   project = var.project_id
   name    = "web-server-lb-ip"
+
 }
