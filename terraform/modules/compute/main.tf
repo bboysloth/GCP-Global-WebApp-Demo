@@ -1,3 +1,10 @@
+data "template_file" "startup_script" {
+  template = file("../../../scripts/startup_script.sh")
+  vars = {
+    project_id = var.project_id
+  }
+}
+
 resource "google_compute_instance_template" "default" {
   name           = "web-server-template"
   machine_type   = "e2-micro"
@@ -11,10 +18,13 @@ resource "google_compute_instance_template" "default" {
   }
 
 # startup script moved to main/scripts/startup_script.sh
-      metadata_from_file = {
-    startup-script = "../../../scripts/startup_script.sh"
+  metadata = {
+    startup-script = data.template_file.startup_script.rendered
   }
 }
+
+
+
 
 resource "google_compute_region_instance_group_manager" "us_mig" {
   provider = google-beta
