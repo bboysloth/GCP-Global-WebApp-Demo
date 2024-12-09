@@ -22,9 +22,10 @@ resource "google_compute_instance_template" "default" {
 resource "google_compute_region_instance_group_manager" "mig" {
   provider = google-beta
   project = var.project_id
- name     = "web-server-mig-${var.region}" # Unique name based on region
- region   = var.region
- wait_for_instances = false
+  name     = "web-server-mig-${var.region}" # Unique name based on region
+  region   = var.region
+ # wait_for_instances = false
+  target_size = 1
 
   version {
     instance_template = google_compute_instance_template.default.id
