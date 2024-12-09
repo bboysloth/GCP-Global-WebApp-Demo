@@ -11,7 +11,7 @@ cat <<EOT > /etc/apache2/sites-available/000-default.conf
 
     <Directory /var/www/html/>
         RewriteEngine On
-        RewriteCond %{REQUEST_URI} !^/index\.html$
+        RewriteCond %%{REQUEST_URI} !^/index\.html$
         RewriteRule ^(.*)$ /index.html [L]
     </Directory>
 
