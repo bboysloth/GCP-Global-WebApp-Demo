@@ -10,16 +10,12 @@ resource "google_compute_instance_template" "default" {
     subnetwork = var.subnet_id
   }
 
-# startup script moved to main/scripts/startup_script.sh
   metadata = {
     startup-script = templatefile("${path.module}/../../../scripts/startup_script.sh", {
       project_id = var.project_id
     })
   }
 }
-
-
-
 
 resource "google_compute_region_instance_group_manager" "us_mig" {
   provider = google-beta
