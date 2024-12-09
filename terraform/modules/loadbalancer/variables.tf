@@ -11,4 +11,5 @@ variable "region" {
 variable "mig_us_instance_group" {
     description = "The instance group for the load balancer in US"
     type = string
+    default = null # Make the variable optional and default it to a null value
 }
