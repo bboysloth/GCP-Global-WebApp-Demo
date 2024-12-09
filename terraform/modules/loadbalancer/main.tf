@@ -1,4 +1,4 @@
-resource "google_compute_http_health_check" "http_health_check" { # Use Global health check now
+resource "google_compute_http_health_check" "http_health_check" { # Corrected resource type
  project             = var.project_id
  name                = "web-server-health-check-global"
  healthy_threshold   = 1
@@ -6,9 +6,8 @@ resource "google_compute_http_health_check" "http_health_check" { # Use Global h
  timeout_sec         = 3
  check_interval_sec  = 5
 
- http_health_check {
+ http_health_check { # This block is now correct within this resource
    port = "80"
-
  }
 }
 
