@@ -26,7 +26,8 @@ variable "project_id" {}
 variable "region" {
   default = "us-central1"
 }
-variable "project_number" { # <--- Added variable declaration for tf plan and tf apply
+
+variable "project_number" {
   type = number
 }
 
@@ -68,7 +69,9 @@ module "storage" {
 module "loadbalancer" {
   source                = "./modules/loadbalancer"
   project_id            = var.project_id
+  region                = var.region 
   mig_us_instance_group    = module.compute_us.instance_group
   mig_europe_instance_group = module.compute_europe.instance_group
   mig_asia_instance_group = module.compute_asia.instance_group
+
 }
