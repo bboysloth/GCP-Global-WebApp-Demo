@@ -5,11 +5,11 @@ METADATA_SERVER="http://metadata.google.internal/computeMetadata/v1/instance/"
 METADATA_HEADERS="Metadata-Flavor: Google"
 
 # Get instance name
-INSTANCE_NAME=$(curl -s -H "$METADATA_HEADERS" "${METADATA_SERVER}hostname")
+INSTANCE_NAME=$(curl -s -H "$METADATA_HEADERS" "$${METADATA_SERVER}hostname")
 # Get region
-REGION=$(curl -s -H "$METADATA_HEADERS" "${METADATA_SERVER}region")
+REGION=$(curl -s -H "$METADATA_HEADERS" "$${METADATA_SERVER}region")
 # Get zone
-ZONE=$(curl -s -H "$METADATA_HEADERS" "${METADATA_SERVER}zone")
+ZONE=$(curl -s -H "$METADATA_HEADERS" "$${METADATA_SERVER}zone")
 
 # Extract short region name
 SHORT_REGION=$(echo "$REGION" | awk -F '/' '{print $4}')
