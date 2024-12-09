@@ -1,4 +1,3 @@
-
 # Configure the Google Cloud provider
 
 terraform {
@@ -38,6 +37,21 @@ module "compute_us" {
   subnet_id  = module.network.subnet_us_id
 }
 
+# Call the storage module for US
+module "storage_us" {
+  source     = "./modules/storage"
+  project_id = var.project_id
+  region     = var.region # Added region for US
+}
+
+# Call the loadbalancer module for US
+module "loadbalancer_us" {
+  source                   = "./modules/loadbalancer"
+  region                   = var.region
+  project_id               = var.project_id
+  mig_us_instance_group    = module.compute_us.instance_group
+}
+
 # Call the compute module for Europe
 module "compute_europe" {
   source     = "./modules/compute"
@@ -46,28 +60,19 @@ module "compute_europe" {
   subnet_id  = module.network.subnet_europe_id
 }
 
-# Call the storage module
-module "storage" {
-  source     = "./modules/storage"
-  project_id = var.project_id
-}
-
-# Call the loadbalancer module for default (US)
-module "loadbalancer" {
-  source                   = "./modules/loadbalancer"
-  region                   = var.region
-  project_id               = var.project_id
-
-  mig_us_instance_group    = module.compute_us.instance_group
-}
-
 # Call the loadbalancer module for europe
 module "loadbalancer_europe" {
   source                   = "./modules/loadbalancer"
-  region                   = "europe-west1"
   project_id               = var.project_id
-  
+  region                   = "europe-west1"
   mig_europe_instance_group = module.compute_europe.instance_group
+}
+
+# Call the storage module for Europe
+module "storage_europe" {
+  source     = "./modules/storage"
+  project_id = var.project_id
+  region     = "europe-west1" # Added region for Europe
 }
 
 # Call the monitor module
@@ -75,4 +80,11 @@ module "monitor" {
   source     = "./modules/monitor"
   project_id = var.project_id
   subnet_id  = module.network.subnet_asia_id
+}
+
+# Call the storage module for Asia
+module "storage_asia" {
+  source     = "./modules/storage"
+  project_id = var.project_id
+  region     = "asia-southeast1" # Added region for Asia
 }
