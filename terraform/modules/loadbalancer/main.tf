@@ -64,5 +64,5 @@ resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
 
 resource "google_compute_global_address" "web_server_lb_ip" {
   project = var.project_id
-  name    = "web-server-lb-ip"
+  name    = "web-server-lb-ip-${var.region}" # Make the name unique per region
 }
