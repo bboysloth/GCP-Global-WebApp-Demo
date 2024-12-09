@@ -29,8 +29,8 @@ module "network" {
   project_id = var.project_id
 }
 
-# Call the compute module
-module "compute" {
+# Call the compute module for US
+module "compute_us" {  # Renamed to compute_us
   source     = "./modules/compute"
   region     = var.region
   project_id = var.project_id
@@ -38,9 +38,8 @@ module "compute" {
   subnet_id     = module.network.subnet_us_id # For us-central1
 }
 
-# Compute Module for Europe (explicit)
-
-module "compute" {
+# Call the compute module for Europe
+module "compute_europe" {  # Renamed to compute_europe
   source     = "./modules/compute"
   region     = "europe-west1" # Explicitly set the region for europe-west1
   project_id = var.project_id
@@ -61,8 +60,8 @@ module "loadbalancer" {
   project_id               = var.project_id
   subnet_us_id             = module.network.subnet_us_id
   subnet_europe_id         = module.network.subnet_europe_id
-  mig_us_instance_group    = module.compute.mig_us_instance_group
-  mig_europe_instance_group = module.compute.mig_europe_instance_group
+  mig_us_instance_group    = module.compute_us.mig_us_instance_group # Updated reference
+  mig_europe_instance_group = module.compute_europe.mig_europe_instance_group # Updated reference
 }
 
 # Call the monitor module
