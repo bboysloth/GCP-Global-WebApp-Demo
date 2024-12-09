@@ -12,8 +12,6 @@ resource "google_storage_bucket" "bucket_us" {
   }
 }
 
-# Create Regional bucket for static content in Europe
-
 resource "google_storage_bucket" "bucket_europe" {
   name     = "gcp-simple-global-web-app-demo-europe-${var.project_id}" # Using project ID for unique naming
   project  = var.project_id
@@ -29,11 +27,11 @@ resource "google_storage_bucket" "bucket_europe" {
 resource "google_storage_bucket_object" "object_us" {
     name = "image_bullet.jpg"
     bucket = google_storage_bucket.bucket_us.name
-    source = "images/image_bullet.jpg"
+    source = "${path.module}/images/image_bullet.jpg"
 }
 
 resource "google_storage_bucket_object" "object_europe" {
     name = "image_dome.jpg"
     bucket = google_storage_bucket.bucket_europe.name
-    source = "images/image_dome.jpg"
+    source = "${path.module}/images/image_dome.jpg"
 }
