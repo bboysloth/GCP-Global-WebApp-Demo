@@ -26,6 +26,9 @@ variable "project_id" {}
 variable "region" {
   default = "us-central1"
 }
+variable "project_number" { # <--- Added variable declaration for tf plan and tf apply
+  type = number
+}
 
 # Call the network module
 module "network" {
@@ -38,21 +41,21 @@ module "compute_us" {
   source     = "./modules/compute"
   region     = var.region
   project_id = var.project_id
-  subnet_id  = module.network.subnet_us_id  # Pass the correct subnet ID
+  subnet_id  = module.network.subnet_us_id
 }
 
 module "compute_europe" {
   source     = "./modules/compute"
   region     = "europe-west1"
   project_id = var.project_id
-  subnet_id  = module.network.subnet_europe_id # Pass the correct subnet ID
+  subnet_id  = module.network.subnet_europe_id
 }
 
 module "compute_asia" {
   source     = "./modules/compute"
   region     = "asia-southeast1"
   project_id = var.project_id
-  subnet_id  = module.network.subnet_asia_id # Pass the correct subnet ID
+  subnet_id  = module.network.subnet_asia_id
 }
 
 # Storage Bucket (single bucket for all regions)
