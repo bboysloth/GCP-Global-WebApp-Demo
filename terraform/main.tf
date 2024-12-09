@@ -1,4 +1,3 @@
-
 # Configure the Google Cloud provider
 
 terraform {
@@ -33,6 +32,11 @@ variable "project_id" {
 variable "region" {
   type        = string
   default     = "us-central1"
+}
+
+# Declare the project_number variable  <-- Added this line
+variable "project_number" {
+  type = number
 }
 
 # Call the network module
