@@ -37,6 +37,12 @@ module "network" {
   project_id = var.project_id
 }
 
+# Storage Bucket (single bucket for all regions)
+module "storage" {
+  source     = "./modules/storage"
+  project_id = var.project_id
+}
+
 # Compute instances
 module "compute_us" {
   source     = "./modules/compute"
@@ -57,12 +63,6 @@ module "compute_asia" {
   region     = "asia-southeast1"
   project_id = var.project_id
   subnet_id  = module.network.subnet_asia_id
-}
-
-# Storage Bucket (single bucket for all regions)
-module "storage" {
-  source     = "./modules/storage"
-  project_id = var.project_id
 }
 
 # Load Balancer
