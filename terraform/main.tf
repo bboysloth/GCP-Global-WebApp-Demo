@@ -68,11 +68,11 @@ module "monitor" {
 }
 
 # Call the loadbalancer module for europe
-module "loadbalancer_europe" { 
-  source                   = "./modules/loadbalancer"
-  project_id               = var.project_id
-  region                   = "europe-west1"
-  mig_europe_instance_group = module.compute_europe.instance_group 
+module "loadbalancer_europe" {
+  source                = "./modules/loadbalancer"
+  project_id            = var.project_id
+  region                = "europe-west1"
+  mig_europe_instance_group = module.compute_europe.instance_group # Use mig_europe_instance_group variable here
 }
 
 # Call the storage module for Europe
