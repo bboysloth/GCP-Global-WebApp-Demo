@@ -31,8 +31,21 @@ resource "google_compute_backend_service" "backend_service" {
 
    }
  }
+}
 
- dynamic "backend" { # Dynamically create backend for Asia
+#Backed Service for Asia
+
+resource "google_compute_backend_service" "backend_service_asia" {
+  provider = google-beta
+ project             = var.project_id
+ name                = "web-server-backend-asia" # Global backend service
+ port_name           = "http"
+ protocol            = "HTTP"
+ timeout_sec         = 10
+ health_checks       = [google_compute_http_health_check.http_health_check.id]
+ load_balancing_scheme = "EXTERNAL_MANAGED" 
+
+dynamic "backend" { # Dynamically create backend for Asia
    for_each = var.mig_asia_instance_group != null ? [1] : []
 
    content {
@@ -45,7 +58,7 @@ resource "google_compute_backend_service" "backend_service" {
  }
 }
 
-# Added to attempt Europe specific backend service
+# Added Europe specific backend service
 
 resource "google_compute_backend_service" "backend_service_europe" {
   provider = google-beta
@@ -99,7 +112,7 @@ resource "google_compute_url_map" "url_map" {
  path_rule {
 
   paths = ["/asia/*"]
-  service = google_compute_backend_service.backend_service.id
+  service = google_compute_backend_service.backend_service_asia.id
 }
 
  }
