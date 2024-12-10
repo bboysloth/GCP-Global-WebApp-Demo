@@ -49,9 +49,9 @@ EOF
 
 sudo chown www-data:www-data /var/www/html # set www-data as owner of the directory
 
-# Create the index.html file with dynamic content and image URL
+# Create the index.html file with dynamic content and image URL for USA
 
-echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1>" > /var/www/html/index.html
+echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1><img src='/image_bullet.jpg'>" > /var/www/html/index.html
 
 # Change the Europe instances to use image_dome.jpg
 if [[ "$SHORT_REGION" == "europe-west1" ]]; then
