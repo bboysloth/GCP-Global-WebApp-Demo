@@ -1,37 +1,13 @@
-resource "google_compute_region_health_check" "http_health_check_us" {
+resource "google_compute_http_health_check" "http_health_check" {
   project             = var.project_id
-  name                = "web-server-health-check-us"
-  region              = "us-central1"
+  name                = "web-server-health-check-global"
   healthy_threshold   = 1
   unhealthy_threshold = 3
   timeout_sec         = 3
   check_interval_sec  = 5
-  port                = 80  # Direct attribute of the health check
-  request_path        = "/" # Direct attribute of the health check
-}
-
-resource "google_compute_region_health_check" "http_health_check_europe" {
-  project             = var.project_id
-  name                = "web-server-health-check-europe"
-  region              = "europe-west1"
-  healthy_threshold   = 1
-  unhealthy_threshold = 3
-  timeout_sec         = 3
-  check_interval_sec  = 5
-  port                = 80 # Direct attribute of the health check
-  request_path        = "/" # Direct attribute of the health check
-}
-
-resource "google_compute_region_health_check" "http_health_check_asia" {
-  project             = var.project_id
-  name                = "web-server-health-check-asia"
-  region              = "asia-southeast1"
-  healthy_threshold   = 1
-  unhealthy_threshold = 3
-  timeout_sec         = 3
-  check_interval_sec  = 5
-  port                = 80  # Direct attribute of the health check
-  request_path        = "/" # Direct attribute of the health check
+  http_health_check {
+    port = "80"
+  }
 }
 
 resource "google_compute_region_backend_service" "backend_service_us" {
@@ -42,7 +18,7 @@ resource "google_compute_region_backend_service" "backend_service_us" {
   protocol              = "HTTP"
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
-  health_checks = [google_compute_region_health_check.http_health_check_us.id]
+  health_checks = [google_compute_http_health_check.http_health_check.id]
 
   backend {
     group           = var.mig_us_instance_group
@@ -60,7 +36,7 @@ resource "google_compute_region_backend_service" "backend_service_europe" {
   protocol              = "HTTP"
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
-  health_checks = [google_compute_region_health_check.http_health_check_europe.id]
+  health_checks = [google_compute_http_health_check.http_health_check.id]
 
   backend {
     group           = var.mig_europe_instance_group
@@ -78,7 +54,7 @@ resource "google_compute_region_backend_service" "backend_service_asia" {
   protocol              = "HTTP"
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
-  health_checks = [google_compute_region_health_check.http_health_check_asia.id]
+  health_checks = [google_compute_http_health_check.http_health_check.id]
 
   backend {
     group           = var.mig_asia_instance_group
