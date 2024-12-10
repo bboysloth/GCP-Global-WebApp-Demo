@@ -4,7 +4,7 @@ resource "google_compute_http_health_check" "http_health_check" {
  check_interval_sec  = 5
  timeout_sec         = 1
  healthy_threshold   = 2
- unhealthy_threshold = 2
+ unhealthy_threshold = 3
 
  request_path = "/"  #  Added a required field
 }
