@@ -19,34 +19,12 @@ resource "google_compute_backend_service" "backend_service" {
  health_checks       = [google_compute_http_health_check.http_health_check.id]
  load_balancing_scheme = "EXTERNAL_MANAGED"
 
-# Added to attempt Europe specific backend service
-
-resource "google_compute_backend_service" "backend_service_europe" {
-  provider = google-beta
- project             = var.project_id
- name                = "web-server-backend-europe" # Global backend service
- port_name           = "http"
- protocol            = "HTTP"
- timeout_sec         = 10
- health_checks       = [google_compute_http_health_check.http_health_check.id]
- load_balancing_scheme = "EXTERNAL_MANAGED"
 
  dynamic "backend" { # Dynamically create backend for US
    for_each = var.mig_us_instance_group != null ? [1] : []
 
    content {
      group           = var.mig_us_instance_group
-     balancing_mode  = "RATE"
-     max_rate_per_instance = 10
-     capacity_scaler = 1
-
-   }
- }
- dynamic "backend" { # Dynamically create backend for Europe
-   for_each = var.mig_europe_instance_group != null ? [1] : []
-
-   content {
-     group           = var.mig_europe_instance_group
      balancing_mode  = "RATE"
      max_rate_per_instance = 10
      capacity_scaler = 1
@@ -65,7 +43,31 @@ resource "google_compute_backend_service" "backend_service_europe" {
 
    }
  }
+}
 
+# Added to attempt Europe specific backend service
+
+resource "google_compute_backend_service" "backend_service_europe" {
+  provider = google-beta
+ project             = var.project_id
+ name                = "web-server-backend-europe" # Global backend service
+ port_name           = "http"
+ protocol            = "HTTP"
+ timeout_sec         = 10
+ health_checks       = [google_compute_http_health_check.http_health_check.id]
+ load_balancing_scheme = "EXTERNAL_MANAGED"
+
+ dynamic "backend" { # Dynamically create backend for Europe
+   for_each = var.mig_europe_instance_group != null ? [1] : []
+
+   content {
+     group           = var.mig_europe_instance_group
+     balancing_mode  = "RATE"
+     max_rate_per_instance = 10
+     capacity_scaler = 1
+
+   }
+ }
 }
 
 resource "google_compute_url_map" "url_map" {
