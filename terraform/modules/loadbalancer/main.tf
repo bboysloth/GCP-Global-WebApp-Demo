@@ -5,9 +5,9 @@ resource "google_compute_http_health_check" "http_health_check" {
   unhealthy_threshold = 3
   timeout_sec         = 3
   check_interval_sec  = 5
-  http_health_check {
-    port = "80"
-  }
+  # http_health_check is not a nested block, these are direct attributes
+  port                = "80"
+  request_path        = "/"
 }
 
 resource "google_compute_region_backend_service" "backend_service_us" {
