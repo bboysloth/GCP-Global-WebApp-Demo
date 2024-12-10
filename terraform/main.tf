@@ -49,6 +49,7 @@ module "compute_us" {
   region     = var.region
   project_id = var.project_id
   subnet_id  = module.network.subnet_us_id
+  health_check_id = module.loadbalancer.http_health_check_id # Pass health check ID
 }
 
 module "compute_europe" {
@@ -56,6 +57,7 @@ module "compute_europe" {
   region     = "europe-west1"
   project_id = var.project_id
   subnet_id  = module.network.subnet_europe_id
+  health_check_id = module.loadbalancer.http_health_check_id # Pass health check ID
 }
 
 module "compute_asia" {
@@ -63,15 +65,16 @@ module "compute_asia" {
   region     = "asia-southeast1"
   project_id = var.project_id
   subnet_id  = module.network.subnet_asia_id
+  health_check_id = module.loadbalancer.http_health_check_id # Pass health check ID
 }
 
 # Load Balancer
 module "loadbalancer" {
-  source                = "./modules/loadbalancer"
-  project_id            = var.project_id
-  region                = var.region 
-  mig_us_instance_group    = module.compute_us.instance_group
+  source                    = "./modules/loadbalancer"
+  project_id                = var.project_id
+  region                    = var.region 
+  mig_us_instance_group     = module.compute_us.instance_group
   mig_europe_instance_group = module.compute_europe.instance_group
-  mig_asia_instance_group = module.compute_asia.instance_group
+  mig_asia_instance_group   = module.compute_asia.instance_group
 
 }
