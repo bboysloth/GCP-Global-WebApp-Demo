@@ -58,6 +58,6 @@ EOF
 sudo chown www-data:www-data /var/www/html # set www-data as owner of the directory
 
 # Create the index.html file with dynamic content and direct image URL
-echo "<h1>Hello from $(hostname) in $SHORT_REGION</h1><img src='$IMAGE_URL'>" > /var/www/html/index.html
+echo echo "<h1>Hello from $(hostname) in $REGION</h1><img src=\"$IMAGE_URL\">" > /var/www/html/index.html
 
 sudo systemctl restart apache2
