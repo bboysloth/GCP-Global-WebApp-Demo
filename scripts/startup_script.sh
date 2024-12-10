@@ -13,7 +13,7 @@ sudo apt-get update
 sudo apt-get install -y apache2
 sudo a2enmod rewrite
 
-project_id="wired-framework-444019-t3"
+echo "Project ID is: ${project_id}"
 
 # Define the base URL for the images
 IMAGE_BASE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}"
