@@ -1,7 +1,12 @@
 #!/bin/bash
 
-# Get the instance's region from metadata server
-REGION=$(curl -s http://metadata.google.internal/computeMetadata/v1/instance/region -H "Metadata-Flavor: Google")
+#!/bin/bash
+
+# Get the instance's zone from the metadata server
+ZONE=$(curl -s http://metadata.google.internal/computeMetadata/v1/instance/zone -H "Metadata-Flavor: Google")
+
+# Extract the region name (e.g., "us-central1-a" -> "us-central1")
+REGION=$(echo "$ZONE" | awk -F'/' '{print $4}' | cut -d'-' -f1,2)
 
 # Extract the short region name (e.g., "us-central1" -> "us")
 SHORT_REGION=$(echo "$REGION" | awk -F'/' '{print $4}' | cut -d'-' -f1,2 | tr '-' '_')
