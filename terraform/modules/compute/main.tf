@@ -28,7 +28,7 @@ resource "google_compute_region_instance_group_manager" "mig" {
   name     = "web-server-mig-${var.region}" # Unique name based on region
   region   = var.region
  # wait_for_instances = false
-  target_size = 1
+  target_size = 2  #changed from 1 to 2 to demonstrate round-robin responses from MIG
 
   version {
     instance_template = google_compute_instance_template.default.id
