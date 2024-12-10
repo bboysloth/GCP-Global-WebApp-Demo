@@ -19,19 +19,19 @@ sudo a2enmod rewrite
 IMAGE_BASE_URL="https://storage.googleapis.com/gcp-simple-global-web-app-demo-${project_id}"
 
 # Use us-central1 instance for image_bullet.jpg
-if [[ "$SHORT_REGION" == "us_central1" ]]; then
+if [[ "$SHORT_REGION" == "us-central1" ]]; then
   # Use direct URL for the image
   IMAGE_URL="$IMAGE_BASE_URL/image_bullet.jpg"
 fi
 
 # Use europe-west1 instance for image_dome.jpg
-if [[ "$SHORT_REGION" == "europe_west1" ]]; then
+if [[ "$SHORT_REGION" == "europe-west1" ]]; then
   # Use direct URL for the image
   IMAGE_URL="$IMAGE_BASE_URL/image_dome.jpg"
 fi
 
 # Use asia-southeast1 instance for image_asia.jpg
-if [[ "$SHORT_REGION" == "asia_southeast1" ]]; then
+if [[ "$SHORT_REGION" == "asia-southeast1" ]]; then
   # Use direct URL for the image
   IMAGE_URL="$IMAGE_BASE_URL/image_asia.jpg"
 fi
