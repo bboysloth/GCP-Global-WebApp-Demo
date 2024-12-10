@@ -34,6 +34,12 @@ resource "google_compute_region_instance_group_manager" "mig" {
     instance_template = google_compute_instance_template.default.id
     name              = "primary"
   }
+  auto_healing_policies {
+    health_check      = google_compute_http_health_check.http_health_check.id
+    initial_delay_sec = 30
+  }
+
+
 
   base_instance_name = "web-server-${var.region}"
 
