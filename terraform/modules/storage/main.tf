@@ -27,3 +27,11 @@ resource "google_storage_bucket_object" "object_asia" {
  bucket = google_storage_bucket.default.name #Reference single bucket
  source = "${path.module}/images/image_asia.jpg"
 }
+
+resource "google_storage_bucket_iam_binding" "public_read" {
+  bucket = google_storage_bucket.default.name
+  role   = "roles/storage.objectViewer"
+  members = [
+    "allUsers",
+  ]
+}
