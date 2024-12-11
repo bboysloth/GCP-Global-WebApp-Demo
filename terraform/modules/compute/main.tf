@@ -45,13 +45,13 @@ resource "google_compute_region_instance_group_manager" "mig" {
 
 }
 
-# Added Autoscaler block but commented out for simplicity sake of demo
+# Added Autoscaler block but commented out for simplicity sake of demo, and to keep cost lower
 # See official TF documentation at: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_autoscaler
 
-# resource "google_compute_region_autoscaler" "foobar" {
-#  name   = "my-region-autoscaler"
-#  region = "us-central1"
-#  target = google_compute_region_instance_group_manager.foobar.id
+# resource "google_compute_region_autoscaler" "mig-autoscaler" {
+#  name   = "my-region-autoscaler-${var.region}" # Name basd on Region
+#  region = var.region
+#  target = google_compute_region_instance_group_manager.mig.id
 #
 #  autoscaling_policy {
 #    max_replicas    = 5
