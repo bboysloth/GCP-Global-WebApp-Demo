@@ -44,3 +44,22 @@ resource "google_compute_region_instance_group_manager" "mig" {
   base_instance_name = "web-server-${var.region}"
 
 }
+
+# Added Autoscaler block but commented out for simplicity sake of demo
+# See official TF documentation at: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_autoscaler
+
+# resource "google_compute_region_autoscaler" "foobar" {
+#  name   = "my-region-autoscaler"
+#  region = "us-central1"
+#  target = google_compute_region_instance_group_manager.foobar.id
+#
+#  autoscaling_policy {
+#    max_replicas    = 5
+#    min_replicas    = 1
+#    cooldown_period = 60
+#
+#    cpu_utilization {
+#      target = 0.5
+#    }
+#  }
+#}
