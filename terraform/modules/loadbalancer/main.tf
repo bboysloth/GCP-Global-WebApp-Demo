@@ -20,7 +20,7 @@ resource "google_compute_backend_service" "backend_service" {
  load_balancing_scheme = "EXTERNAL_MANAGED"
 
 
- dynamic "backend" { # Dynamically create backend for US
+ dynamic "backend" { # Dynamically create backend for US for GLOBAL backend Service
    for_each = var.mig_us_instance_group != null ? [1] : []
 
    content {
@@ -31,9 +31,34 @@ resource "google_compute_backend_service" "backend_service" {
 
    }
  }
+
+ dynamic "backend" { # Dynamically create backend for Europe for GLOBAL backend Service
+   for_each = var.mig_europe_instance_group != null ? [1] : []
+
+   content {
+     group           = var.mig_europe_instance_group
+     balancing_mode  = "RATE"
+     max_rate_per_instance = 10
+     capacity_scaler = 1
+
+   }
+ }
+
+ dynamic "backend" { # Dynamically create backend for ASIA for GLOBAL backend Service
+   for_each = var.mig_asia_instance_group != null ? [1] : []
+
+   content {
+     group           = var.mig_asia_instance_group
+     balancing_mode  = "RATE"
+     max_rate_per_instance = 10
+     capacity_scaler = 1
+
+   }
+ }
+
 }
 
-#Backed Service for Asia
+#Stand-Alone (URL Map) Asia based Backend Service
 
 resource "google_compute_backend_service" "backend_service_asia" {
   provider = google-beta
@@ -58,7 +83,7 @@ dynamic "backend" { # Dynamically create backend for Asia
  }
 }
 
-# Added Europe specific backend service
+# Stand-Alone (URL Map) European based Backend Service
 
 resource "google_compute_backend_service" "backend_service_europe" {
   provider = google-beta
@@ -96,6 +121,7 @@ resource "google_compute_url_map" "url_map" {
  path_matcher {
    name            = "allpaths"
    default_service = google_compute_backend_service.backend_service.id
+   # This Rule will default everything to the US backend unless geo-locationally closer to other Europe/Asia MIGs
 
    path_rule {
      paths   = ["/us/*"]
