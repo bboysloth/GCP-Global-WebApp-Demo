@@ -1,7 +1,7 @@
 resource "google_storage_bucket" "default" {
- project  = var.project_id
+ project                     = var.project_id
  name                        = "gcp-simple-global-web-app-demo-${var.project_id}" # Simplified bucket name
- location = "US"  # Fixed location for simplicity
+ location                    = "US"  # Fixed location for simplicity
  uniform_bucket_level_access = true
 
  website {
