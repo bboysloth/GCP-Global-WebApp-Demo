@@ -10,7 +10,8 @@ Each Modules is broken out into 3 Terraform files (per standard) and will be use
 
 The demo is meant to be launched from a local terminal. 
 Once you have performed a 'terraform init' and pulled down the repo, you will need to run your commands with the proper flags for the variables to populate
-      Examples: 
+      Examples:
+      
             terraform plan -var="<project_id>" -var="<project_number>"
             terraform apply -var="<project_id>" -var="<project_number>"
             terraform destroy -var="<project_id>" -var="<project_number>"
